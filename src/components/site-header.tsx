@@ -1,35 +1,33 @@
 import Link from "next/link";
-import { SparklesIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { Flag } from "@/components/outcome/review";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
-  { href: "/#walkthrough", label: "How a run works" },
-  { href: "/#anatomy", label: "Anatomy" },
-  { href: "/#method", label: "Method" },
-  { href: "/#estimator", label: "Estimator" },
+  { href: "/#how", label: "How it runs" },
+  { href: "/#case", label: "One case" },
+  { href: "/#engagement", label: "Engagement" },
   { href: "/#fit", label: "Fit" },
-  { href: "/#faq", label: "FAQ" },
+  { href: "/#questions", label: "Questions" },
 ] as const;
 
 export function SiteHeader() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/40 bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <SparklesIcon className="size-5 text-primary" />
-          Outcome Agents
+    <header className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-5 sm:px-8">
+        <Link href="/" className="flex items-baseline gap-2.5">
+          <span className="font-serif text-lg tracking-tight">
+            Outcome Agents
+          </span>
+          <span
+            data-flag="name"
+            className="hidden text-[11px] text-muted-foreground sm:inline"
+          >
+            working name
+            <Flag id="name" />
+          </span>
         </Link>
-        <span
-          data-flag="name"
-          className="hidden rounded-full border px-2 py-0.5 text-xs text-muted-foreground sm:inline"
-        >
-          working name
-          <Flag id="name" />
-        </span>
         <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
           {navLinks.map((link) => (
             <Link
@@ -40,12 +38,15 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/#contact"
+            className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+          >
+            Start a conversation
+          </Link>
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
-          <Button size="sm" asChild className="hidden sm:inline-flex">
-            <Link href="/#contact">Start a conversation</Link>
-          </Button>
           <MobileNav
             links={[
               ...navLinks,

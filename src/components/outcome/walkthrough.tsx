@@ -2,28 +2,25 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import { PROCESSES, STAGES, type TagKind } from "@/lib/outcome";
 import { cn } from "@/lib/utils";
 
 const tagLabel: Record<TagKind, string> = {
-  bought: "Platform supplies: ",
-  built: "We build: ",
-  human: "Human decides: ",
+  bought: "Platform supplies",
+  built: "We build",
+  human: "A person decides",
 };
 
-const tagClass: Record<TagKind, string> = {
-  bought: "border-primary/30 bg-primary/10 text-primary",
-  built: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400",
-  human:
-    "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+const markClass: Record<TagKind, string> = {
+  bought: "mark",
+  built: "mark mark-built",
+  human: "mark mark-human",
 };
 
-const dotClass: Record<string, string> = {
-  built: "bg-amber-500",
-  human: "bg-emerald-500",
-};
-
+/**
+ * One case, end to end. Laid out as a ledger: the stage list on the left,
+ * the current stage on the right. Same content and stage model as before.
+ */
 export function Walkthrough() {
   const [proc, setProc] = useState(0);
   const [step, setStep] = useState(0);
@@ -47,7 +44,7 @@ export function Walkthrough() {
       <div
         role="tablist"
         aria-label="Example processes"
-        className="flex flex-wrap gap-2"
+        className="flex flex-wrap gap-x-6 gap-y-2 border-b border-border pb-3 text-sm"
       >
         {PROCESSES.map((p, i) => (
           <button
@@ -60,10 +57,10 @@ export function Walkthrough() {
               setStep(0);
             }}
             className={cn(
-              "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+              "relative pb-1 transition-colors",
               i === proc
-                ? "border-primary bg-primary text-primary-foreground"
-                : "hover:bg-muted"
+                ? "text-foreground after:absolute after:inset-x-0 after:-bottom-[13px] after:h-px after:bg-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {p.name}
@@ -71,93 +68,103 @@ export function Walkthrough() {
         ))}
       </div>
 
-      <p className="mt-4 max-w-3xl text-muted-foreground">{process.intro}</p>
+      <p className="prose-memo mt-5 text-muted-foreground">{process.intro}</p>
 
-      <div
-        role="tablist"
-        aria-label="Stages"
-        onKeyDown={(e) => {
-          if (e.key === "ArrowRight" && step < STAGES.length - 1) setStep(step + 1);
-          if (e.key === "ArrowLeft" && step > 0) setStep(step - 1);
-        }}
-        className="mt-6 flex gap-2 overflow-x-auto pb-1"
-      >
-        {STAGES.map((s, i) => (
-          <button
-            key={s.key}
-            type="button"
-            role="tab"
-            aria-selected={i === step}
-            onClick={() => setStep(i)}
-            className={cn(
-              "flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors",
-              i === step
-                ? "border-primary bg-primary text-primary-foreground"
-                : i < step
-                  ? "border-primary/40 text-primary"
-                  : "hover:bg-muted"
-            )}
-          >
-            <span
-              aria-hidden
-              className={cn(
-                "size-2 rounded-full",
-                dotClass[s.kind ?? ""] ?? "bg-muted-foreground"
-              )}
-            />
-            {i + 1}. {s.label}
-          </button>
-        ))}
-      </div>
-
-      <div
-        role="tabpanel"
-        aria-live="polite"
-        className="mt-4 rounded-2xl border bg-card p-6 md:p-8"
-      >
-        <p className="text-sm text-muted-foreground">
-          Stage {step + 1} of {STAGES.length} · {stage.label}
-        </p>
-        <h3 className="mt-2 text-xl font-semibold tracking-tight md:text-2xl">
-          {current.title}
-        </h3>
-        <p className="mt-3 leading-relaxed text-muted-foreground">
-          {current.body}
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          {current.tags.map(([kind, text]) => (
-            <span
-              key={`${kind}-${text}`}
-              className={cn(
-                "rounded-full border px-3 py-1 text-xs",
-                tagClass[kind]
-              )}
-            >
-              {tagLabel[kind]}
-              {text}
-            </span>
+      <div className="mt-8 grid gap-8 lg:grid-cols-[15rem_1fr] lg:gap-12">
+        <ol
+          role="tablist"
+          aria-label="Stages"
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+              if (step < STAGES.length - 1) setStep(step + 1);
+            }
+            if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+              if (step > 0) setStep(step - 1);
+            }
+          }}
+          className="-mx-5 flex gap-1 overflow-x-auto px-5 pb-1 lg:mx-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:px-0"
+        >
+          {STAGES.map((s, i) => (
+            <li key={s.key} className="shrink-0 lg:border-t lg:border-border lg:last:border-b">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={i === step}
+                onClick={() => setStep(i)}
+                className={cn(
+                  "flex w-full items-center gap-3 px-3 py-2 text-left text-sm transition-colors lg:px-1 lg:py-2.5",
+                  "border border-border lg:border-0",
+                  i === step
+                    ? "bg-foreground text-background lg:bg-transparent lg:text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <span className="w-4 font-mono text-[11px] tabular-nums opacity-70">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span
+                  className={cn(
+                    "flex-1",
+                    i === step && "lg:font-medium"
+                  )}
+                >
+                  {s.label}
+                </span>
+                {s.kind ? (
+                  <span aria-hidden className={markClass[s.kind]} />
+                ) : null}
+              </button>
+            </li>
           ))}
-        </div>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => step > 0 && setStep(step - 1)}
-            disabled={step === 0}
-          >
-            ← Previous
-          </Button>
-          <Button type="button" onClick={next}>
-            {isLastStage
-              ? proc < PROCESSES.length - 1
-                ? "Next process →"
-                : "Back to the first process"
-              : "Next stage →"}
-          </Button>
+        </ol>
+
+        <div role="tabpanel" aria-live="polite" className="min-w-0">
+          <p className="kicker">
+            Stage {step + 1} of {STAGES.length} · {stage.label}
+          </p>
+          <h3 className="display mt-3 text-2xl sm:text-3xl">{current.title}</h3>
+          <p className="prose-memo mt-4">{current.body}</p>
+
+          <dl className="mt-6 border-t border-border text-sm">
+            {current.tags.map(([kind, text]) => (
+              <div
+                key={`${kind}-${text}`}
+                className="grid gap-1 border-b border-border py-2.5 sm:grid-cols-[11rem_1fr] sm:gap-4"
+              >
+                <dt className="flex items-center gap-2 text-muted-foreground">
+                  <span aria-hidden className={markClass[kind]} />
+                  {tagLabel[kind]}
+                </dt>
+                <dd className={cn(kind === "human" && "text-signal")}>{text}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <button
+              type="button"
+              onClick={() => step > 0 && setStep(step - 1)}
+              disabled={step === 0}
+              className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ← Previous
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              className="underline decoration-foreground underline-offset-4"
+            >
+              {isLastStage
+                ? proc < PROCESSES.length - 1
+                  ? "Next process →"
+                  : "Back to the first process →"
+                : "Next stage →"}
+            </button>
+          </div>
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-muted-foreground">
+      <p className="mt-8 text-sm text-muted-foreground">
         Illustrative only. These are not client engagements. The case details,
         document types and systems are placeholders for what a discovery would
         map in your business.

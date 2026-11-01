@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { CALLS } from "@/lib/outcome";
 import { cn } from "@/lib/utils";
 
-// Judgment calls with a data-flag target on the page. The rest (polish,
-// redesign, mobile, template) cover the whole page and get no jump link.
+// Judgment calls with a data-flag target on the page. The rest cover the
+// whole page and get no jump link.
 const FLAG_TARGETS = new Set([
   "name",
   "hero",
@@ -21,9 +21,10 @@ const FLAG_TARGETS = new Set([
   "solo",
   "frontier",
   "contact",
+  "byline",
 ]);
 
-/** Inline "decision" marker, shown only while the strip toggle is on. */
+/** Inline "decision" marker, shown only while the notes toggle is on. */
 export function Flag({ id }: { id: string }) {
   const [open, setOpen] = useState(false);
   const call = CALLS.find((c) => c.id === id);
@@ -32,21 +33,20 @@ export function Flag({ id }: { id: string }) {
     <span className="flag-wrap relative inline-block">
       <button
         type="button"
-        className="flag-mark ml-2 rounded-full border border-primary/40 px-2 py-0.5 align-middle text-[11px] font-medium text-primary"
+        className="flag-mark ml-2 rounded-sm border border-signal/60 px-1.5 py-0.5 align-middle font-sans text-[10px] font-medium tracking-wide text-signal uppercase"
         aria-expanded={open}
         onClick={(e) => {
-          // Inside a <summary> or button-adjacent spot: never toggle anything else.
           e.preventDefault();
           e.stopPropagation();
           setOpen((v) => !v);
         }}
       >
-        decision
+        note
       </button>
       {open && (
         <div
           role="note"
-          className="absolute left-0 top-full z-50 mt-2 w-[min(32rem,90vw)] rounded-lg border bg-card p-4 text-left text-sm font-normal shadow-xl"
+          className="absolute left-0 top-full z-50 mt-2 w-[min(32rem,90vw)] border border-border bg-popover p-4 text-left font-sans text-sm font-normal leading-relaxed tracking-normal normal-case shadow-lg"
         >
           <strong>Judgment call: </strong>
           {call.title} {call.body}
@@ -56,7 +56,12 @@ export function Flag({ id }: { id: string }) {
   );
 }
 
-export function ReviewStrip() {
+/**
+ * Founder-facing notes: a small footer control that opens the drawer of
+ * judgment calls and toggles the inline markers. Out of the buyer's way so
+ * the page can be judged as a page.
+ */
+export function ReviewNotes() {
   const [showFlags, setShowFlags] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -77,6 +82,13 @@ export function ReviewStrip() {
     return () => document.removeEventListener("keydown", onKey);
   }, [drawerOpen]);
 
+  // Deep link: /#notes opens the drawer.
+  useEffect(() => {
+    if (window.location.hash !== "#notes") return;
+    const t = window.setTimeout(() => setDrawerOpen(true), 0);
+    return () => window.clearTimeout(t);
+  }, []);
+
   const jumpTo = (id: string) => {
     setDrawerOpen(false);
     setShowFlags(true);
@@ -87,65 +99,52 @@ export function ReviewStrip() {
 
   return (
     <>
-      <div
-        role="region"
-        aria-label="Demo review strip"
-        className="border-b border-border/40 bg-muted/50"
-      >
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 lg:px-8">
-          <span className="rounded-full border px-2.5 py-0.5 text-xs font-medium">
-            Demo concept
-          </span>
-          <span className="flex-1 text-sm text-muted-foreground">
-            Not a live company site. The name is provisional. Every example on
-            this page is illustrative. Nothing here is a client, a metric, or
-            a price.
-          </span>
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={showFlags}
-              onChange={(e) => setShowFlags(e.target.checked)}
-              className="accent-primary"
-            />
-            Show judgment calls ({CALLS.length})
-          </label>
-          <button
-            type="button"
-            onClick={() => setDrawerOpen(true)}
-            className="rounded-full border px-3 py-1 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            List them
-          </button>
-        </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        <button
+          type="button"
+          id="notes"
+          onClick={() => setDrawerOpen(true)}
+          className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+        >
+          Notes for the founder ({CALLS.length})
+        </button>
+        <label className="flex cursor-pointer items-center gap-2 text-muted-foreground">
+          <input
+            type="checkbox"
+            checked={showFlags}
+            onChange={(e) => setShowFlags(e.target.checked)}
+            className="accent-signal"
+          />
+          Mark them on the page
+        </label>
       </div>
 
       {drawerOpen && (
         <>
           <div
             aria-hidden
-            className="fixed inset-0 z-[60] bg-black/50"
+            className="fixed inset-0 z-[60] bg-foreground/30"
             onClick={() => setDrawerOpen(false)}
           />
           <aside
             aria-label="Judgment calls made on this page"
-            className="fixed inset-y-0 right-0 z-[61] w-[min(36rem,92vw)] overflow-y-auto border-l bg-background p-6"
+            className="fixed inset-y-0 right-0 z-[61] w-[min(36rem,92vw)] overflow-y-auto border-l border-border bg-background p-6"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold tracking-tight">
+                <h2 className="font-serif text-2xl tracking-tight">
                   Judgment calls
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Things the page decides that the founder has not said in so
-                  many words. Shoot at them.
+                  many words. Newest first. Shoot at them.
                 </p>
               </div>
               <button
                 type="button"
                 aria-label="Close"
                 onClick={() => setDrawerOpen(false)}
-                className="rounded-md border px-2.5 py-1 text-lg leading-none transition-colors hover:bg-muted"
+                className="border border-border px-2.5 py-1 text-lg leading-none transition-colors hover:bg-muted"
               >
                 ×
               </button>
@@ -159,8 +158,8 @@ export function ReviewStrip() {
                       type="button"
                       onClick={() => jumpTo(call.id)}
                       className={cn(
-                        "font-medium text-primary underline underline-offset-4",
-                        "hover:text-primary/80"
+                        "font-medium underline underline-offset-4",
+                        "hover:text-signal"
                       )}
                     >
                       Jump to it

@@ -1,10 +1,9 @@
 /**
- * Outcome Agents content — concise port, 2026-11-01.
- * The previous version carried the old page's full copy verbatim; this one
- * shortens every walkthrough body to one or two sentences. Titles, tags,
- * stages, and all judgment calls are unchanged, plus a new "concise" call
- * disclosing the cut. Plain serializable data, safe to import from Server
- * or Client Components.
+ * Outcome Agents content — memo edition, 2026-11-01.
+ * Walkthrough content, stages and tags are unchanged from the concise port.
+ * Judgment calls are listed newest first; the "memo" entry covers this
+ * redesign. Plain serializable data, safe to import from Server or Client
+ * Components.
  */
 
 // The founder sets this. Placeholder until then (flagged on page).
@@ -20,14 +19,34 @@ export interface JudgmentCall {
 
 export const CALLS: JudgmentCall[] = [
   {
-    id: "name",
-    title: "Kept the working name Outcome Agents, labelled provisional.",
-    body: "No alternative is adopted on the page. Two candidates if you want to compare: “Last Mile Agents” (names the thesis directly) and “Trigger to Record” (names the shape of a run). Your decision, not the page’s.",
+    id: "memo",
+    title: "Rebuilt the page as a written memo, not a product launch.",
+    body: "The SaaS template (typewriter headline, marquee, bento, number tickers, meteors, dock, aurora) sold software to self-serve signups; this firm sells one engagement to one careful reader. The page is now a numbered document on paper: serif display, hairline rules, tables for the parts, the engagement and the gates, one signal colour reserved for the human-decides mark. Light by default, dark available. Every claim, number, gate, price statement and open question is carried over or tightened; none is new. The handover\u2019s own rule for a public page is the brief: a distilled excerpt of the playbook, doctrine plus offer ladder. No data-flag target: this entry covers the whole page.",
   },
   {
     id: "hero",
-    title: "Hero leads with ownership from trigger to completion.",
-    body: "Deliberately contrasted with a chatbot that answers questions, not with individual employees or individual Copilot use. The tabled individual-vs-process angle and its copy are not used anywhere.",
+    title: "Hero now leads with the thesis, not the product.",
+    body: "\u201cThe model is not the hard part\u201d states the last-mile thesis in the buyer\u2019s terms, then the lede lists the five things that are hard (mapping, permissions, grounding, proving, owning) and closes on what the firm does about them. The previous hero (\u201cAn agent that owns a business outcome\u201d) read as a software claim. Two alternates if you want to compare: \u201cYou already have the models. You don\u2019t have the process.\u201d and \u201cCapability has outrun adoption.\u201d Your call.",
+  },
+  {
+    id: "byline",
+    title: "No byline, on purpose.",
+    body: "A founder-led boutique would normally sign its page. Nothing goes out under your name without your say-so on the exact wording, so the page says \u201cone person, for now\u201d in the questions and leaves the signature off. Add your name and one line about you when you are ready; the footer is where it goes.",
+  },
+  {
+    id: "notes",
+    title: "Moved the review strip out of the buyer\u2019s way.",
+    body: "The demo banner, the judgment-call toggle and the drawer used to sit above the hero, so the page could never be judged as a page. They now live in the footer (and at /#notes). The demo-concept disclosure stays in the footer text and in the page metadata (noindex, robots disallow). Nothing was removed; it was moved.",
+  },
+  {
+    id: "method",
+    title: "Showed all ten engagement stages (0 to 9) as a table instead of six cards.",
+    body: "The concise page compressed the playbook\u2019s ten steps into six cards. A table carries ten rows without getting long, so the stages, windows and the gate your side signs are now listed as the playbook has them. Week numbers are the clean-case ranges.",
+  },
+  {
+    id: "name",
+    title: "Kept the working name Outcome Agents, labelled provisional.",
+    body: "No alternative is adopted on the page. Two candidates if you want to compare: “Last Mile Agents” (names the thesis directly) and “Trigger to Record” (names the shape of a run). Your decision, not the page’s.",
   },
   {
     id: "open-problem",
@@ -38,11 +57,6 @@ export const CALLS: JudgmentCall[] = [
     id: "bought-built",
     title: "Added a Platform-supplies / We-build / Human-decides legend throughout.",
     body: "This is how the page keeps “built versus claimed” honest without a paragraph of caveats. Hash-bound approval, the multi-day reviewer queue and the write-blocking eval gate are tagged as our build everywhere, and the anatomy says explicitly that no vendor ships them.",
-  },
-  {
-    id: "method",
-    title: "Compressed the playbook’s ten steps (0 to 9) into six stages.",
-    body: "Qualify; discover and baseline (merges map, baseline, content readiness, golden set); build; evaluate; pilot; hand over and tune. The gates are kept verbatim in spirit. Week numbers are the playbook’s clean-case ranges.",
   },
   {
     id: "timeline",

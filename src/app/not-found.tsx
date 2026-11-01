@@ -1,41 +1,31 @@
 import Link from "next/link";
-import { HomeIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { RetroGrid } from "@/components/velora/retro-grid";
-import { BlurFade } from "@/components/velora/blur-fade";
-import { AnimatedGradientText } from "@/components/velora/animated-gradient-text";
 
 export default function NotFound() {
   return (
-    <main className="relative">
+    <main className="flex min-h-screen flex-col">
       <SiteHeader />
-      <section className="relative flex min-h-svh items-center justify-center overflow-hidden">
-        <RetroGrid />
-        <div className="relative mx-auto max-w-2xl px-4 py-32 text-center">
-          <BlurFade>
-            <p className="font-mono text-8xl font-semibold tracking-tight lg:text-9xl">
-              <AnimatedGradientText>404</AnimatedGradientText>
-            </p>
-            <h1 className="mt-6 text-2xl font-semibold tracking-tight lg:text-3xl">
-              This page scrolled past the horizon
-            </h1>
-            <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-              The page you&apos;re looking for doesn&apos;t exist or was moved.
-              This site is a single page.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Button size="lg" className="rounded-full" asChild>
-                <Link href="/">
-                  <HomeIcon className="size-4" />
-                  Back home
-                </Link>
-              </Button>
-            </div>
-          </BlurFade>
-        </div>
+      <section className="mx-auto w-full max-w-5xl flex-1 px-5 pt-24 pb-20 sm:px-8">
+        <p className="kicker">404 · Page not found</p>
+        <h1 className="display mt-6 text-4xl sm:text-5xl">
+          Nothing here to approve.
+        </h1>
+        <p className="lede mt-6 max-w-[48ch]">
+          This page does not exist. The whole site is one page; everything is
+          on it.
+        </p>
+        <p className="mt-8 text-sm">
+          <Link
+            href="/"
+            className="underline decoration-foreground underline-offset-4"
+          >
+            ← Back to the page
+          </Link>
+        </p>
       </section>
+      <SiteFooter />
     </main>
   );
 }

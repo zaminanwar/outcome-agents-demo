@@ -8,7 +8,7 @@ export const siteConfig = {
     process.env.NEXT_PUBLIC_SITE_URL ??
     "https://outcome-agents-demo-pj6uhtqcuq-uc.a.run.app"
   ).replace(/\/$/, ""),
-  tagline: "An agent that owns a business outcome, from trigger to completion.",
+  tagline: "The model is not the hard part.",
   description:
-    "Demo concept. A boutique, forward-deployed consultancy that builds process agents inside your Microsoft 365 estate: deterministic control plane, grounded retrieval, human approval bound to the exact content reviewed, and a full audit trail. You own the code.",
+    "Demo concept. A boutique, forward-deployed consultancy that builds one process agent at a time inside your Microsoft 365 tenant: code owns the transaction, the model owns judgment inside bounded steps, a named person owns the consequences. Measured against your baseline, handed over to your team.",
 } as const;

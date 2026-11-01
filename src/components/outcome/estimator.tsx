@@ -80,7 +80,7 @@ export function Estimator() {
   ];
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2">
+    <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
       <form
         className="space-y-5"
         autoComplete="off"
@@ -126,7 +126,7 @@ export function Estimator() {
               step="5"
               value={share}
               onChange={(e) => setShare(e.target.value)}
-              className="w-full accent-primary"
+              className="w-full accent-foreground"
             />
             <output className="w-12 shrink-0 text-right text-sm font-medium">
               {Math.round(shareFrac * 100)}%
@@ -177,31 +177,31 @@ export function Estimator() {
         </label>
       </form>
 
-      <div aria-live="polite" className="space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div aria-live="polite" className="space-y-5">
+        <dl className="border-t border-border">
           {stats.map((s) => (
             <div
               key={s.label}
-              className={cn(
-                "rounded-xl border bg-card p-4",
-                s.accent && "border-primary/40"
-              )}
+              className="grid grid-cols-[1fr_auto] items-baseline gap-4 border-b border-border py-3"
             >
-              <p className="text-xs text-muted-foreground">{s.label}</p>
-              <p className="mt-1 text-2xl font-semibold tracking-tight">
+              <dt className="text-sm text-muted-foreground">{s.label}</dt>
+              <dd
+                className={cn(
+                  "font-serif text-2xl tabular-nums tracking-tight",
+                  s.accent && "text-signal"
+                )}
+              >
                 {s.value}
-              </p>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
         <p
           className={cn(
-            "rounded-xl border p-4 text-sm leading-relaxed",
-            verdictTone === "ok" &&
-              "border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300",
-            verdictTone === "warn" &&
-              "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300",
-            verdictTone === "muted" && "bg-muted/50 text-muted-foreground"
+            "prose-memo border-l-2 pl-4 text-[1rem]",
+            verdictTone === "ok" && "border-foreground",
+            verdictTone === "warn" && "border-signal",
+            verdictTone === "muted" && "border-border text-muted-foreground"
           )}
         >
           {verdict}

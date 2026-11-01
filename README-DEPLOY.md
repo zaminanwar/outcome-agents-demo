@@ -6,7 +6,7 @@ export. Pushing to `main` deploys it to the existing Cloud Run service
 https://outcome-agents-demo-pj6uhtqcuq-uc.a.run.app — same URL as the manual
 deploys.
 
-Repo: https://github.com/zaminanwar/outcome-agents-demo (private).
+Repo: https://github.com/zaminanwar/outcome-agents-demo (public).
 Remote `origin` in this checkout already points there.
 
 ## Live path: GitHub Actions (enabled 2026-11-01)

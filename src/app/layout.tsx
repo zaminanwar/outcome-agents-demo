@@ -23,17 +23,18 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "shadcn ui",
-    "animated components",
-    "react components",
-    "landing page template",
-    "tailwind css",
-    "motion",
-    "magic ui alternative",
-    "aceternity alternative",
-    "free ui library",
+    "process agents",
+    "business process automation",
+    "Copilot Studio",
+    "Microsoft 365",
+    "approval workflows",
+    "evaluation gates",
   ],
   authors: [{ name: siteConfig.name }],
+  robots: { index: false, follow: false },
+  icons: {
+    icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312161f'/%3E%3Cpath d='M8 17l5 5 11-12' stroke='%23fff' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+  },
   openGraph: {
     type: "website",
     url: siteConfig.url,
@@ -62,8 +63,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
           disableTransitionOnChange
         >
           {children}

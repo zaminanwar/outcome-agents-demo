@@ -1,0 +1,45 @@
+# GitHub Actions: on every push to main, build the static export and deploy
+# to the existing Cloud Run service. The Cloud Build equivalent is
+# cloudbuild.yaml. Enable one, not both.
+# Required repo variables (Settings > Secrets and variables > Actions):
+#   GCP_PROJECT_ID, GCP_REGION (us-central1), GCP_WIF_PROVIDER,
+#   GCP_WIF_SERVICE_ACCOUNT. See README-DEPLOY.md for the one-time setup.
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.16.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install
+      - run: pnpm build
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_WIF_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: outcome-agents-demo
+          region: ${{ vars.GCP_REGION }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          source: .

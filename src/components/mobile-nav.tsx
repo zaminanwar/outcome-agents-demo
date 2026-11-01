@@ -29,7 +29,7 @@ export function MobileNav({
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-72">
-        <SheetTitle className="px-6 pt-6">Velora UI</SheetTitle>
+        <SheetTitle className="px-6 pt-6">Outcome Agents</SheetTitle>
         <SheetDescription className="sr-only">Site navigation</SheetDescription>
         <nav className="flex flex-col gap-1 px-3 pb-6">
           {links.map((link) => (

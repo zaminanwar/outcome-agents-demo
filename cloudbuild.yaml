@@ -1,0 +1,54 @@
+# Cloud Build: on every push to main, build the static export, containerize
+# it, and deploy to the existing Cloud Run service. Used by a Cloud Build
+# GitHub trigger (see README-DEPLOY.md); the GitHub Actions equivalent is
+# .github/workflows/deploy.yml. Enable one, not both.
+steps:
+  # 1. Static export. The workspace persists across steps, so out/ is there
+  # for the docker build below. out/ itself is gitignored and never committed.
+  - name: node:24
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        corepack enable
+        corepack prepare pnpm@12.16.1 --activate
+        pnpm install
+        pnpm build
+
+  # 2. Container image. The repo Dockerfile copies out/ into nginx.
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us-central1-docker.pkg.dev/$PROJECT_ID/outcome-agents/outcome-agents-demo:$SHORT_SHA
+      - -t
+      - us-central1-docker.pkg.dev/$PROJECT_ID/outcome-agents/outcome-agents-demo:latest
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - us-central1-docker.pkg.dev/$PROJECT_ID/outcome-agents/outcome-agents-demo:$SHORT_SHA
+
+  # 3. Deploy the new image to the existing service (same URL as today).
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - outcome-agents-demo
+      - --image=us-central1-docker.pkg.dev/$PROJECT_ID/outcome-agents/outcome-agents-demo:$SHORT_SHA
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=128Mi
+      - --cpu=1
+      - --min-instances=0
+      - --max-instances=2
+
+images:
+  - us-central1-docker.pkg.dev/$PROJECT_ID/outcome-agents/outcome-agents-demo:$SHORT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY

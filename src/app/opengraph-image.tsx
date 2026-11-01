@@ -1,5 +1,3 @@
-import { blocksMeta } from "@/lib/blocks-meta";
-import { componentsMeta } from "@/lib/components-meta";
 import { ogCard, ogSize } from "@/lib/og-card";
 import { siteConfig } from "@/lib/site-config";
 
@@ -11,13 +9,10 @@ export const alt = `${siteConfig.name} — ${siteConfig.tagline}`;
 
 export default function OpengraphImage() {
   return ogCard({
-    title: "Landing pages that feel",
-    accent: "effortless.",
-    description: "Free, MIT-licensed animated components and blocks for React.",
-    chips: [
-      `${componentsMeta.length} components`,
-      `${blocksMeta.length} blocks`,
-      "$0 forever",
-    ],
+    title: "An agent that owns a business outcome,",
+    accent: "from trigger to completion.",
+    description:
+      "Demo concept. A boutique, forward-deployed consultancy building process agents inside your Microsoft 365 estate.",
+    chips: ["Demo concept", "No clients, metrics, or prices", "Built with Velora UI (MIT)"],
   });
 }

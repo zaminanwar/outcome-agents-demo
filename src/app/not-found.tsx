@@ -23,8 +23,7 @@ export default function NotFound() {
             </h1>
             <p className="mx-auto mt-4 max-w-md text-muted-foreground">
               The page you&apos;re looking for doesn&apos;t exist or was moved.
-              Even this 404 is built from Velora primitives — the grid behind
-              it is one component.
+              This site is a single page.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Button size="lg" className="rounded-full" asChild>
@@ -32,9 +31,6 @@ export default function NotFound() {
                   <HomeIcon className="size-4" />
                   Back home
                 </Link>
-              </Button>
-              <Button variant="ghost" size="lg" asChild>
-                <Link href="/components">Browse components</Link>
               </Button>
             </div>
           </BlurFade>

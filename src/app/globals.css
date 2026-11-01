@@ -337,3 +337,11 @@
     animation: none;
   }
 }
+
+/* Judgment-call markers: hidden until the review strip toggle is on. */
+.flag-mark {
+  display: none;
+}
+body.flags-on .flag-mark {
+  display: inline-flex;
+}

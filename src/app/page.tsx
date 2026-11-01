@@ -46,9 +46,9 @@ function Section({
 const GAP: Array<[string, string, string]> = [
   ["Starts when", "Someone remembers to open Copilot", "The document arrives"],
   ["Reads", "Whatever that person pastes in or can see", "Your approved content, permission-trimmed"],
-  ["When it doesn’t know", "Writes something plausible", "Writes “gap” and names the owner"],
-  ["Checked by", "The same person, if at all", "Code first, then against your expert’s past cases"],
-  ["Approved", "Implicitly, by pasting it onward", "Explicitly, on the exact text, by a named person"],
+  ["When it doesn’t know", "Fills the gap with its best guess", "Writes “gap” and names the owner"],
+  ["Checked by", "The same person who prompted", "Code first, then against your expert’s past cases"],
+  ["Approved", "By whoever pastes it onward", "Explicitly, on the exact text, by a named person"],
   ["Ends up", "In a chat window, then a copy-paste", "In the system of record, committed by a person"],
   ["What you can measure", "Licences assigned", "Recall, unsupported claims, review minutes, per case"],
 ];

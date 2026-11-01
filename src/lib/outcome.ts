@@ -19,14 +19,34 @@ export interface JudgmentCall {
 
 export const CALLS: JudgmentCall[] = [
   {
-    id: "memo",
-    title: "Rebuilt the page as a written memo, not a product launch.",
-    body: "The SaaS template (typewriter headline, marquee, bento, number tickers, meteors, dock, aurora) sold software to self-serve signups; this firm sells one engagement to one careful reader. The page is now a numbered document on paper: serif display, hairline rules, tables for the parts, the engagement and the gates, one signal colour reserved for the human-decides mark. Light by default, dark available. Every claim, number, gate, price statement and open question is carried over or tightened; none is new. The handover\u2019s own rule for a public page is the brief: a distilled excerpt of the playbook, doctrine plus offer ladder. No data-flag target: this entry covers the whole page.",
+    id: "focus",
+    title: "Reopened D8: the page now leads with individual Copilot use versus a process that runs.",
+    body: "The founder said on 2026-11-01 that the ideal customer is a company whose employees already use Copilot individually, and that the pain of that versus the value of a process agent should be the whole page. That is the individual-vs-process angle tabled as D8 on 2026-10-31. The copy here is written fresh from his words that day; neither tabled version (v1 claims, v2 RFP worked example) was reused. If this angle is not what he meant, the memo edition on the previous commit of main is the fallback. No data-flag target: covers the whole page.",
+  },
+  {
+    id: "hidden",
+    title: "Hid the playbook: no ten-gate table, no six-part anatomy, no three-owners section, no estimator, no decided/open lists, no FAQ.",
+    body: "The founder said the detail does not serve a purpose on the page and to stick to the value proposition and pain points. The components still exist in the repo (walkthrough, estimator) and the content is in the playbook. The open decisions are no longer on the page; they are listed in the next note so the honesty survives in the drawer.",
+  },
+  {
+    id: "open",
+    title: "Open questions now live here, not on the page.",
+    body: "Still open as of 2026-11-01: the exact first process (RFP is the leading candidate); the final technical shape; the pricing model (per-outcome open, not offered); Microsoft-first as a default versus estate-neutral as a principle; positioning against Microsoft\u2019s own forward-deployed services arm. The page states Microsoft-first and the RFP example as if settled for a reader; the drawer says they are not.",
+  },
+  {
+    id: "gap",
+    title: "The before/after table characterises individual Copilot use from the process side.",
+    body: "Seven rows: starts when, reads, when it doesn\u2019t know, checked by, approved, ends up, what you can measure. The left column describes ungrounded, unapproved individual use in neutral terms (\u201cwrites something plausible\u201d, \u201cimplicitly, by pasting it onward\u201d). No adoption statistics are cited because none in the research base are independently audited. Soften any row that reads as a dig at Microsoft rather than a description of the gap.",
+  },
+  {
+    id: "example",
+    title: "One worked example, the RFP, drawn as five panes with placeholder data.",
+    body: "Case 0412, requirement IDs R-01 to R-04, library references like Lib/CY-14 and a truncated hash are all invented placeholders and the caption says so. The four verbs (drop in, see answered or flagged, approve exact text, press submit) are the playbook\u2019s end-user UX. The eight steps underneath are shown as a single line, not explained. Other processes are named as a list, not described.",
   },
   {
     id: "hero",
-    title: "Hero now leads with the thesis, not the product.",
-    body: "\u201cThe model is not the hard part\u201d states the last-mile thesis in the buyer\u2019s terms, then the lede lists the five things that are hard (mapping, permissions, grounding, proving, owning) and closes on what the firm does about them. The previous hero (\u201cAn agent that owns a business outcome\u201d) read as a software claim. Two alternates if you want to compare: \u201cYou already have the models. You don\u2019t have the process.\u201d and \u201cCapability has outrun adoption.\u201d Your call.",
+    title: "Hero: \u201cYour people have Copilot. Your processes don\u2019t.\u201d",
+    body: "States the gap the founder named as the ideal customer\u2019s situation. The lede ends on \u201con the platform you already have\u201d rather than \u201con licences you already pay for\u201d because Copilot Studio usage is metered and the no-charge path for M365 Copilot-licensed users is not verified in-tenant. Alternates: \u201cCopilot for one person is a tool. For a process, it is a system.\u201d or the previous \u201cThe model is not the hard part.\u201d",
   },
   {
     id: "byline",
@@ -39,24 +59,9 @@ export const CALLS: JudgmentCall[] = [
     body: "The demo banner, the judgment-call toggle and the drawer used to sit above the hero, so the page could never be judged as a page. They now live in the footer (and at /#notes). The demo-concept disclosure stays in the footer text and in the page metadata (noindex, robots disallow). Nothing was removed; it was moved.",
   },
   {
-    id: "method",
-    title: "Showed all ten engagement stages (0 to 9) as a table instead of six cards.",
-    body: "The concise page compressed the playbook\u2019s ten steps into six cards. A table carries ten rows without getting long, so the stages, windows and the gate your side signs are now listed as the playbook has them. Week numbers are the clean-case ranges.",
-  },
-  {
     id: "name",
     title: "Kept the working name Outcome Agents, labelled provisional.",
     body: "No alternative is adopted on the page. Two candidates if you want to compare: “Last Mile Agents” (names the thesis directly) and “Trigger to Record” (names the shape of a run). Your decision, not the page’s.",
-  },
-  {
-    id: "open-problem",
-    title: "Said on the page that the problem statement and technical shape are unsettled.",
-    body: "A client-facing page normally hides this. The brief asked for it to stay visibly open, so it is stated once here and again in “What’s decided, what isn’t”.",
-  },
-  {
-    id: "bought-built",
-    title: "Added a Platform-supplies / We-build / Human-decides legend throughout.",
-    body: "This is how the page keeps “built versus claimed” honest without a paragraph of caveats. Hash-bound approval, the multi-day reviewer queue and the write-blocking eval gate are tagged as our build everywhere, and the anatomy says explicitly that no vendor ships them.",
   },
   {
     id: "timeline",
@@ -64,34 +69,14 @@ export const CALLS: JudgmentCall[] = [
     body: "8 to 10 weeks clean, 3 to 6 months with integration or a security audit, 9+ months regulated, plus the golden-set size of 20 to 50 cases. These come from the playbook’s evidenced bands and are labelled as planning ranges from published implementer experience, not promises. Remove if you’d rather quote nothing.",
   },
   {
-    id: "ms-first",
-    title: "Microsoft-first presented as a default, with estate-neutrality named as open.",
-    body: "The off-estate stack is shown as the alternative, not the pitch, and named with the components from the playbook (Temporal, LangGraph with PydanticAI nodes, Postgres/pgvector, Langfuse).",
-  },
-  {
-    id: "estimator",
-    title: "Rebuilt the estimator around reviewer load, not savings.",
-    body: "It computes hours today, reviewer hours with the agent, approvals per day and queue hours per reviewer from the visitor’s own inputs. It never claims a saving; it shows the approval bottleneck. Defaults (120 items, 90 minutes, 100% review, 12 reviewer minutes) are placeholders, not benchmarks.",
-  },
-  {
     id: "pricing",
     title: "No prices anywhere; said so explicitly.",
     body: "The page says quotes follow qualification and that per-outcome pricing is open, not offered. The FAQ includes the finance-contact verification question from the playbook as the test for whether per-outcome could ever be contractible.",
   },
   {
-    id: "status",
-    title: "Listed the open questions on the page, except the endgame.",
-    body: "Problem statement, technical shape, pricing model, Microsoft-first versus estate-neutral, and positioning against Microsoft’s services arm are listed as open. Build-to-last versus build-to-be-bought is left off: it is your question, not a prospect’s.",
-  },
-  {
     id: "solo",
     title: "FAQ says “one person, for now”.",
     body: "Honest, and it explains why qualification is strict. Nothing else about staffing, history or plans appears anywhere. Soften or remove if it reads as a weakness to the audience you have in mind.",
-  },
-  {
-    id: "frontier",
-    title: "Named Microsoft’s forward-deployed services in the FAQ without resolving positioning.",
-    body: "The answer states the current lane (mid-size, one process, pilot-first, handover) and says the positioning question is open. It does not claim differentiation beyond that.",
   },
   {
     id: "contact",

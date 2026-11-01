@@ -10,16 +10,11 @@ import { cn } from "@/lib/utils";
 const FLAG_TARGETS = new Set([
   "name",
   "hero",
-  "open-problem",
-  "bought-built",
-  "method",
+  "gap",
+  "example",
   "timeline",
-  "ms-first",
-  "estimator",
   "pricing",
-  "status",
   "solo",
-  "frontier",
   "contact",
   "byline",
 ]);

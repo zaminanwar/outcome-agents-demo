@@ -3,15 +3,12 @@ import Link from "next/link";
 import { Flag, ReviewNotes } from "@/components/outcome/review";
 
 const links = [
-  { text: "How it runs", href: "/#how" },
-  { text: "One case, end to end", href: "/#case" },
-  { text: "Built and bought", href: "/#parts" },
-  { text: "The engagement", href: "/#engagement" },
-  { text: "Reviewer load", href: "/#estimator" },
-  { text: "Fit", href: "/#fit" },
-  { text: "Decided and open", href: "/#status" },
-  { text: "Questions", href: "/#questions" },
-  { text: "Start a conversation", href: "/#contact" },
+  { text: "The gap", href: "/#gap" },
+  { text: "One example", href: "/#example" },
+  { text: "What you get", href: "/#get" },
+  { text: "How we work", href: "/#how" },
+  { text: "Is this you?", href: "/#you" },
+  { text: "Tell us about the process", href: "/#contact" },
 ];
 
 export function SiteFooter() {

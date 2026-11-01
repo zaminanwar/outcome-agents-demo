@@ -19,6 +19,11 @@ export interface JudgmentCall {
 
 export const CALLS: JudgmentCall[] = [
   {
+    id: "diagram",
+    title: "Drew the shift as one animated diagram with two states of the same process.",
+    body: "Generalised nouns from the founder\u2019s answers on 2026-11-01: work arrives, approved content, systems of record, colleagues, Copilot, the person, done. Today: the person sits in the lane and pulls from everything. With a process agent: the agent takes the seat, Copilot moves inside it (his answer: it moves into the agent, not kept beside the person), the person moves to the approval seat (move, not remove), and the arrows flip from pull to push (his pick: direction). Plays once when half in view, then a Today / With a process agent toggle. Reduced-motion users get instant switches. Three words in the agent box; the eight steps stay on the example section below. No real product, tenant or client is depicted.",
+  },
+  {
     id: "focus",
     title: "Reopened D8: the page now leads with individual Copilot use versus a process that runs.",
     body: "The founder said on 2026-11-01 that the ideal customer is a company whose employees already use Copilot individually, and that the pain of that versus the value of a process agent should be the whole page. That is the individual-vs-process angle tabled as D8 on 2026-10-31. The copy here is written fresh from his words that day; neither tabled version (v1 claims, v2 RFP worked example) was reused. If this angle is not what he meant, the memo edition on the previous commit of main is the fallback. No data-flag target: covers the whole page.",

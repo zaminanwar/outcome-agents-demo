@@ -5,6 +5,7 @@ import { Flag } from "@/components/outcome/review";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
+  { href: "/#shift", label: "The shift" },
   { href: "/#gap", label: "The gap" },
   { href: "/#example", label: "One example" },
   { href: "/#get", label: "What you get" },

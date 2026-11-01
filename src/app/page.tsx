@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Flag } from "@/components/outcome/review";
 import { ContactForm } from "@/components/outcome/contact-form";
+import { ShiftDiagram } from "@/components/outcome/shift-diagram";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -266,8 +267,8 @@ export default function Home() {
           have.
         </p>
         <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm">
-          <Link href="#example" className="underline decoration-foreground underline-offset-4">
-            See one example ↓
+          <Link href="#shift" className="underline decoration-foreground underline-offset-4">
+            See the shift ↓
           </Link>
           <Link
             href="#you"
@@ -275,6 +276,25 @@ export default function Home() {
           >
             Is this you? ↓
           </Link>
+        </div>
+      </section>
+
+      {/* The shift, drawn */}
+      <section id="shift" className="scroll-mt-20 border-t border-border">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
+          <p className="kicker" data-flag="diagram">
+            The same process, before and after
+            <Flag id="diagram" />
+          </p>
+          <div className="mt-6">
+            <ShiftDiagram />
+          </div>
+          <p className="prose-memo mt-8 text-muted-foreground">
+            Nothing is removed. The person moves from the middle of the lane
+            to the approval seat. Copilot moves from a window they visit to a
+            step inside the process. Every arrow that used to point into the
+            person now points from the process to them.
+          </p>
         </div>
       </section>
 

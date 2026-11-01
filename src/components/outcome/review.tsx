@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 const FLAG_TARGETS = new Set([
   "name",
   "hero",
+  "diagram",
   "gap",
   "example",
   "timeline",

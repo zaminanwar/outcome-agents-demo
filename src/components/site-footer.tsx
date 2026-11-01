@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Flag, ReviewNotes } from "@/components/outcome/review";
 
 const links = [
+  { text: "The shift", href: "/#shift" },
   { text: "The gap", href: "/#gap" },
   { text: "One example", href: "/#example" },
   { text: "What you get", href: "/#get" },

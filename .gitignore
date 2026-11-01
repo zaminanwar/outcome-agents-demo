@@ -48,3 +48,6 @@ next-env.d.ts
 
 # Local agent worktrees
 .claude/
+
+# Local review screenshots generated during design passes
+.review/

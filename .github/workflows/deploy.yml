@@ -1,6 +1,8 @@
-# GitHub Actions: on every push to main, build the static export and deploy
-# to the existing Cloud Run service. The Cloud Build equivalent is
-# cloudbuild.yaml. Enable one, not both.
+# GitHub Actions: on every push to main, build the static export, containerize
+# it, and deploy to the existing Cloud Run service. This is the live deploy
+# path. The Cloud Build equivalent is cloudbuild.yaml; it is NOT enabled
+# (trigger creation failed — Cloud Build's GitHub App is not installed for
+# this account; see README-DEPLOY.md). Enable one, not both.
 # Required repo variables (Settings > Secrets and variables > Actions):
 #   GCP_PROJECT_ID, GCP_REGION (us-central1), GCP_WIF_PROVIDER,
 #   GCP_WIF_SERVICE_ACCOUNT. See README-DEPLOY.md for the one-time setup.
@@ -37,9 +39,24 @@ jobs:
           workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
           service_account: ${{ vars.GCP_WIF_SERVICE_ACCOUNT }}
 
-      - uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: outcome-agents-demo
-          region: ${{ vars.GCP_REGION }}
-          project_id: ${{ vars.GCP_PROJECT_ID }}
-          source: .
+      # No Cloud Build involved: the runner builds the image and pushes it
+      # straight to Artifact Registry, then deploys that image.
+      - name: Build and push image
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+          docker build -t us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/outcome-agents/outcome-agents-demo:${{ github.sha }} -t us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/outcome-agents/outcome-agents-demo:latest .
+          docker push us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/outcome-agents/outcome-agents-demo:${{ github.sha }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy outcome-agents-demo \
+            --image=us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/outcome-agents/outcome-agents-demo:${{ github.sha }} \
+            --region=${{ vars.GCP_REGION }} \
+            --project=${{ vars.GCP_PROJECT_ID }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --port=8080 \
+            --memory=128Mi \
+            --cpu=1 \
+            --min-instances=0 \
+            --max-instances=2

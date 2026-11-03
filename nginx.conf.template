@@ -10,11 +10,16 @@ server {
         try_files $uri =404;
     }
 
+    # HTML is never cached: browsers must revalidate on every load so a new
+    # deploy shows up immediately. (Without this, `/` carried no Cache-Control
+    # header and browsers kept the old page by heuristic for hours.)
     location = / {
+        expires -1;
         try_files /index.html =404;
     }
 
     location / {
+        expires -1;
         try_files $uri $uri.html =404;
     }
 

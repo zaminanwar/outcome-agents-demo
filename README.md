@@ -9,16 +9,27 @@ there is no backend.
 
 ## What it is
 
-A single-page site built on [Velora UI](https://github.com/ColorlibHQ/velora-ui)
-(MIT) — its SaaS template sections, cut down to one page with all placeholder
-content (testimonials, statistics, pricing, client logos, non-home pages)
-removed. The content is the Outcome Agents story: a process agent that works
-a case from trigger to system of record, with approved evidence only, a
-write-blocking eval gate, hash-bound human approval, and one run record per
-case.
+A single-page site built with [shadcn/ui](https://ui.shadcn.com) on Next.js
+and Tailwind CSS 4. The content is the Outcome Agents story: a process agent
+that works a case from trigger to system of record, with approved evidence
+only, a code check before any review, approval bound to the exact text by a
+named person, and one run record per case.
 
-The review strip at the top of the page lists every judgment call made while
-building it. Read that before changing a claim.
+The "Notes for the founder" control in the footer (also at `/#notes`) lists
+every judgment call made while building the page. Read that before changing
+a claim. The copy lives in `src/lib/content.ts`; the notes in
+`src/lib/outcome.ts`.
+
+```
+src/app/              layout, page, 404, OG image, robots, sitemap
+src/components/ui/    shadcn/ui primitives (radix-nova style)
+src/components/sections/   one file per section of the page
+src/components/outcome/    the diagram, the run-record card, the gap table,
+                           the case illustration, the contact form, the notes
+```
+
+The shadcn CLI is configured (`components.json`); add primitives with
+`pnpm dlx shadcn add <name>`.
 
 ## Develop
 
@@ -26,6 +37,8 @@ building it. Read that before changing a claim.
 pnpm install
 pnpm dev        # local dev server
 pnpm build      # static export lands in out/
+pnpm lint
+pnpm typecheck
 ```
 
 To preview exactly what Cloud Run serves:
@@ -38,8 +51,8 @@ docker run -p 8080:8080 outcome-agents-demo
 ## Deploy
 
 Every push to `main` deploys to Cloud Run (`outcome-agents-demo`, us-central1)
-via a Cloud Build GitHub trigger — see [README-DEPLOY.md](./README-DEPLOY.md)
-for the trigger, permissions, and the GitHub Actions alternative.
+via GitHub Actions — see [README-DEPLOY.md](./README-DEPLOY.md) for the
+one-time setup.
 
 Live: https://outcome-agents-demo-pj6uhtqcuq-uc.a.run.app
 
@@ -49,4 +62,6 @@ Live: https://outcome-agents-demo-pj6uhtqcuq-uc.a.run.app
   `hello@outcome-agents.example` until the founder sets a real one.
 - nginx serves real 404s (no SPA fallback) and caches hashed `_next/static`
   assets for a year; `index.html` is never cached.
-- Built with Velora UI (MIT). See [LICENSE](./LICENSE).
+- Earlier editions (the hand-rolled memo, then the Velora UI port) are in git
+  history. The repository keeps the MIT [LICENSE](./LICENSE) it was created
+  under.

@@ -1,15 +1,39 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { CopyIcon, MailIcon, PenLineIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { CONTACT_EMAIL } from "@/lib/outcome";
 
-const labelClass = "text-sm font-medium";
-const fieldClass =
-  "w-full rounded-md border border-input bg-background px-3 py-2 text-sm";
+function Field({
+  id,
+  label,
+  children,
+}: {
+  id: string;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="grid gap-2">
+      <Label htmlFor={id}>{label}</Label>
+      {children}
+    </div>
+  );
+}
 
 export function ContactForm() {
   const [name, setName] = useState("");
@@ -96,128 +120,154 @@ export function ContactForm() {
   };
 
   return (
-    <div className="grid gap-10 lg:grid-cols-2">
-      <form
-        className="space-y-5"
-        noValidate
-        onSubmit={(e) => {
-          e.preventDefault();
-          compose();
-        }}
-      >
-        <label className="block space-y-1.5">
-          <span className={labelClass}>Your name</span>
-          <Input
-            type="text"
-            autoComplete="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </label>
-        <label className="block space-y-1.5">
-          <span className={labelClass}>Company and role</span>
-          <Input
-            type="text"
-            autoComplete="organization"
-            placeholder="e.g. Head of Bids, mid-size insurer"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-          />
-        </label>
-        <label className="block space-y-1.5">
-          <span className={labelClass}>Your estate</span>
-          <select
-            value={estate}
-            onChange={(e) => setEstate(e.target.value)}
-            className={fieldClass}
-          >
-            <option value="Microsoft 365">Microsoft 365</option>
-            <option value="Mostly Microsoft, some other systems">
-              Mostly Microsoft, some other systems
-            </option>
-            <option value="Not Microsoft">Not Microsoft</option>
-          </select>
-        </label>
-        <label className="block space-y-1.5">
-          <span className={labelClass}>The process, in a few sentences</span>
-          <Textarea
-            rows={4}
-            placeholder="What starts it, who touches it, where it stalls, what system it ends up in."
-            value={process}
-            onChange={(e) => setProcess(e.target.value)}
-          />
-        </label>
-        <label className="block space-y-1.5">
-          <span className={labelClass}>Roughly how many items a month</span>
-          <Input
-            type="text"
-            placeholder="A number or a range is fine"
-            value={volume}
-            onChange={(e) => setVolume(e.target.value)}
-          />
-        </label>
-        <label className="block space-y-1.5">
-          <span className={labelClass}>Who owns the number today</span>
-          <Input
-            type="text"
-            placeholder="Role or name"
-            value={owner}
-            onChange={(e) => setOwner(e.target.value)}
-          />
-        </label>
-        <label className="block space-y-1.5">
-          <span className={labelClass}>
-            What would make a first conversation worth your time
-          </span>
-          <Textarea
-            rows={3}
-            value={want}
-            onChange={(e) => setWant(e.target.value)}
-          />
-        </label>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button type="submit">Compose email draft</Button>
-          <span className="text-sm text-muted-foreground">
-            Nothing leaves this page until you send it yourself.
-          </span>
-        </div>
-      </form>
+    <div className="grid items-start gap-6 lg:grid-cols-2">
+      <Card>
+        <form
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault();
+            compose();
+          }}
+        >
+          <CardHeader className="border-b">
+            <CardTitle>About the process</CardTitle>
+            <CardDescription>
+              Rough answers are fine. Everything is editable in the draft.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-5 pt-5">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field id="name" label="Your name">
+                <Input
+                  id="name"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Field>
+              <Field id="company" label="Company and role">
+                <Input
+                  id="company"
+                  autoComplete="organization"
+                  placeholder="e.g. Head of Bids, mid-size insurer"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                />
+              </Field>
+            </div>
+            <Field id="estate" label="Your estate">
+              <NativeSelect
+                id="estate"
+                value={estate}
+                onChange={(e) => setEstate(e.target.value)}
+              >
+                <NativeSelectOption value="Microsoft 365">Microsoft 365</NativeSelectOption>
+                <NativeSelectOption value="Mostly Microsoft, some other systems">
+                  Mostly Microsoft, some other systems
+                </NativeSelectOption>
+                <NativeSelectOption value="Not Microsoft">Not Microsoft</NativeSelectOption>
+              </NativeSelect>
+            </Field>
+            <Field id="process" label="The process, in a few sentences">
+              <Textarea
+                id="process"
+                rows={4}
+                placeholder="What starts it, who touches it, where it stalls, what system it ends up in."
+                value={process}
+                onChange={(e) => setProcess(e.target.value)}
+              />
+            </Field>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field id="volume" label="Roughly how many items a month">
+                <Input
+                  id="volume"
+                  placeholder="A number or a range is fine"
+                  value={volume}
+                  onChange={(e) => setVolume(e.target.value)}
+                />
+              </Field>
+              <Field id="owner" label="Who owns the number today">
+                <Input
+                  id="owner"
+                  placeholder="Role or name"
+                  value={owner}
+                  onChange={(e) => setOwner(e.target.value)}
+                />
+              </Field>
+            </div>
+            <Field id="want" label="What would make a first conversation worth your time">
+              <Textarea
+                id="want"
+                rows={3}
+                value={want}
+                onChange={(e) => setWant(e.target.value)}
+              />
+            </Field>
+          </CardContent>
+          <CardFooter className="flex-wrap gap-3">
+            <Button type="submit">
+              <PenLineIcon data-icon="inline-start" />
+              Compose email draft
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              Nothing leaves this page until you send it yourself.
+            </span>
+          </CardFooter>
+        </form>
+      </Card>
 
-      {showDraft && (
-        <div id="draft-box" className="space-y-5">
-          <div>
-            <h3 className="text-lg font-semibold tracking-tight">Your draft</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Sending to <code>{CONTACT_EMAIL}</code>. Edit anything you like
-              before you send.
-            </p>
-          </div>
-          <label className="block space-y-1.5">
-            <span className={labelClass}>Subject</span>
-            <Input
-              type="text"
-              value={draftSubject}
-              onChange={(e) => setDraftSubject(e.target.value)}
-            />
-          </label>
-          <label className="block space-y-1.5">
-            <span className={labelClass}>Body</span>
-            <Textarea
-              ref={bodyRef}
-              rows={16}
-              value={draftBody}
-              onChange={(e) => setDraftBody(e.target.value)}
-            />
-          </label>
-          <div className="flex flex-wrap items-center gap-3">
+      {showDraft ? (
+        <Card id="draft-box" className="scroll-mt-20">
+          <CardHeader className="border-b">
+            <CardTitle>Your draft</CardTitle>
+            <CardDescription>
+              To <span className="font-mono text-foreground">{CONTACT_EMAIL}</span>. Edit
+              anything you like before you send.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-5 pt-5">
+            <Field id="subject" label="Subject">
+              <Input
+                id="subject"
+                value={draftSubject}
+                onChange={(e) => setDraftSubject(e.target.value)}
+              />
+            </Field>
+            <Field id="body" label="Body">
+              <Textarea
+                id="body"
+                ref={bodyRef}
+                rows={16}
+                className="font-mono text-xs leading-relaxed"
+                value={draftBody}
+                onChange={(e) => setDraftBody(e.target.value)}
+              />
+            </Field>
+          </CardContent>
+          <CardFooter className="flex-wrap gap-3">
             <Button asChild>
-              <a href={mailto}>Open in your mail app</a>
+              <a href={mailto}>
+                <MailIcon data-icon="inline-start" />
+                Open in your mail app
+              </a>
             </Button>
             <Button type="button" variant="outline" onClick={copyDraft}>
+              <CopyIcon data-icon="inline-start" />
               Copy draft
             </Button>
-            <span className="text-sm text-muted-foreground">{status}</span>
-          </div>
+            <span className="text-xs text-muted-foreground" aria-live="polite">
+              {status}
+            </span>
+          </CardFooter>
+        </Card>
+      ) : (
+        <div className="hidden rounded-xl border border-dashed p-8 text-sm text-muted-foreground lg:block">
+          <p className="font-medium text-foreground">What happens when you press compose</p>
+          <ol className="mt-3 list-decimal space-y-2 pl-5">
+            <li>A plain-text email is drafted from your answers, here, in the browser.</li>
+            <li>You read it and change anything you like.</li>
+            <li>You open it in your own mail app, or copy it. This page sends nothing.</li>
+          </ol>
         </div>
       )}
     </div>

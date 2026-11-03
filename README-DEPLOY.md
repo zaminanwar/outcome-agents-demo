@@ -1,6 +1,6 @@
 # Deploy on every push
 
-This repo is the Outcome Agents demo: a tuned Velora UI (MIT) Next.js static
+This repo is the Outcome Agents demo: a shadcn/ui on Next.js static
 export. Pushing to `main` deploys it to the existing Cloud Run service
 `outcome-agents-demo` (us-central1, project `consultancy-website-512906`) at
 https://outcome-agents-demo-pj6uhtqcuq-uc.a.run.app — same URL as the manual
@@ -69,8 +69,8 @@ To preview exactly what Cloud Run serves, build the image locally:
 
 ## Notes
 
-- `out/` is gitignored build output; CI builds it. Keep Velora's `LICENSE`
-  file in the repo (MIT attribution).
+- `out/` is gitignored build output; CI builds it. Keep the `LICENSE`
+  file in the repo (MIT; earlier editions were built on Velora UI).
 - The page is still a demo: `noindex` + robots disallow-all, contact form
   composes a draft only, contact email is the placeholder
   `hello@outcome-agents.example`.

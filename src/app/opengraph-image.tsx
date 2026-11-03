@@ -9,10 +9,9 @@ export const alt = `${siteConfig.name} — ${siteConfig.tagline}`;
 
 export default function OpengraphImage() {
   return ogCard({
-    title: "An agent that owns a business outcome,",
-    accent: "from trigger to completion.",
+    title: siteConfig.tagline,
     description:
-      "Demo concept. A boutique, forward-deployed consultancy building process agents inside your Microsoft 365 estate.",
-    chips: ["Demo concept", "No clients, metrics, or prices", "Built with Velora UI (MIT)"],
+      "We take one process and make it run: started by the work arriving, grounded in approved content, checked, approved by a named person, written to the system of record.",
+    chips: ["Demo concept", "No clients, metrics, or prices", "Microsoft 365 estates"],
   });
 }

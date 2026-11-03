@@ -1,9 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { NotebookPenIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import { CALLS } from "@/lib/outcome";
-import { cn } from "@/lib/utils";
 
 // Judgment calls with a data-flag target on the page. The rest cover the
 // whole page and get no jump link.
@@ -20,46 +32,40 @@ const FLAG_TARGETS = new Set([
   "byline",
 ]);
 
-/** Inline "decision" marker, shown only while the notes toggle is on. */
+/** Inline "note" marker, shown only while the notes toggle is on. */
 export function Flag({ id }: { id: string }) {
-  const [open, setOpen] = useState(false);
   const call = CALLS.find((c) => c.id === id);
   if (!call) return null;
   return (
-    <span className="flag-wrap relative inline-block">
-      <button
-        type="button"
-        className="flag-mark ml-2 rounded-sm border border-signal/60 px-1.5 py-0.5 align-middle font-sans text-[10px] font-medium tracking-wide text-signal uppercase"
-        aria-expanded={open}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setOpen((v) => !v);
-        }}
-      >
-        note
-      </button>
-      {open && (
-        <div
-          role="note"
-          className="absolute left-0 top-full z-50 mt-2 w-[min(32rem,90vw)] border border-border bg-popover p-4 text-left font-sans text-sm font-normal leading-relaxed tracking-normal normal-case shadow-lg"
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="flag-mark ml-2 h-5 items-center rounded-full border border-signal/50 bg-signal/10 px-2 align-middle font-sans text-[10px] font-medium tracking-wide text-signal uppercase transition-colors hover:bg-signal/20"
         >
-          <strong>Judgment call: </strong>
-          {call.title} {call.body}
-        </div>
-      )}
-    </span>
+          note
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        className="w-[min(32rem,90vw)] text-left font-sans text-sm leading-relaxed font-normal tracking-normal normal-case"
+      >
+        <p className="text-xs font-medium tracking-wide text-signal uppercase">Judgment call</p>
+        <p className="mt-2 text-balance font-medium">{call.title}</p>
+        <p className="mt-2 text-muted-foreground">{call.body}</p>
+      </PopoverContent>
+    </Popover>
   );
 }
 
 /**
- * Founder-facing notes: a small footer control that opens the drawer of
- * judgment calls and toggles the inline markers. Out of the buyer's way so
- * the page can be judged as a page.
+ * Founder-facing notes: a footer control that opens the sheet of judgment
+ * calls and a switch that reveals the inline markers. Out of the buyer's way
+ * so the page can be judged as a page.
  */
 export function ReviewNotes() {
   const [showFlags, setShowFlags] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     document.body.classList.toggle("flags-on", showFlags);
@@ -69,104 +75,84 @@ export function ReviewNotes() {
     };
   }, [showFlags]);
 
-  useEffect(() => {
-    if (!drawerOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setDrawerOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [drawerOpen]);
-
-  // Deep link: /#notes opens the drawer.
+  // Deep link: /#notes opens the sheet.
   useEffect(() => {
     if (window.location.hash !== "#notes") return;
-    const t = window.setTimeout(() => setDrawerOpen(true), 0);
+    const t = window.setTimeout(() => setOpen(true), 0);
     return () => window.clearTimeout(t);
   }, []);
 
   const jumpTo = (id: string) => {
-    setDrawerOpen(false);
+    setOpen(false);
     setShowFlags(true);
-    document
-      .querySelector(`[data-flag="${id}"]`)
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(() => {
+      document
+        .querySelector(`[data-flag="${id}"]`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 150);
   };
 
   return (
-    <>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-        <button
-          type="button"
-          id="notes"
-          onClick={() => setDrawerOpen(true)}
-          className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-        >
-          Notes for the founder ({CALLS.length})
-        </button>
-        <label className="flex cursor-pointer items-center gap-2 text-muted-foreground">
-          <input
-            type="checkbox"
-            checked={showFlags}
-            onChange={(e) => setShowFlags(e.target.checked)}
-            className="accent-signal"
-          />
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <Button id="notes" variant="outline" size="sm" onClick={() => setOpen(true)}>
+          <NotebookPenIcon data-icon="inline-start" />
+          Notes for the founder
+          <Badge variant="secondary" className="ml-1 px-1.5 font-mono">
+            {CALLS.length}
+          </Badge>
+        </Button>
+        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
+          <SheetHeader>
+            <SheetTitle className="text-lg">Judgment calls</SheetTitle>
+            <SheetDescription>
+              Things the page decides that the founder has not said in so many
+              words. Newest first. Shoot at them.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="flex items-center gap-2 px-4">
+            <Switch
+              id="flags-in-sheet"
+              checked={showFlags}
+              onCheckedChange={setShowFlags}
+            />
+            <Label htmlFor="flags-in-sheet" className="text-muted-foreground">
+              Mark them on the page
+            </Label>
+          </div>
+          <ol className="divide-y px-4 pb-6">
+            {CALLS.map((call, i) => (
+              <li key={call.id} className="py-4 text-sm leading-relaxed">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 font-mono text-xs text-muted-foreground">
+                    {String(CALLS.length - i).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <p className="font-medium">{call.title}</p>
+                    <p className="mt-1 text-muted-foreground">{call.body}</p>
+                    {FLAG_TARGETS.has(call.id) && (
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="mt-1 h-auto px-0 text-signal"
+                        onClick={() => jumpTo(call.id)}
+                      >
+                        Jump to it on the page
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </SheetContent>
+      </Sheet>
+      <div className="flex items-center gap-2">
+        <Switch id="flags" checked={showFlags} onCheckedChange={setShowFlags} />
+        <Label htmlFor="flags" className="font-normal text-muted-foreground">
           Mark them on the page
-        </label>
+        </Label>
       </div>
-
-      {drawerOpen && (
-        <>
-          <div
-            aria-hidden
-            className="fixed inset-0 z-[60] bg-foreground/30"
-            onClick={() => setDrawerOpen(false)}
-          />
-          <aside
-            aria-label="Judgment calls made on this page"
-            className="fixed inset-y-0 right-0 z-[61] w-[min(36rem,92vw)] overflow-y-auto border-l border-border bg-background p-6"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="font-serif text-2xl tracking-tight">
-                  Judgment calls
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Things the page decides that the founder has not said in so
-                  many words. Newest first. Shoot at them.
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="Close"
-                onClick={() => setDrawerOpen(false)}
-                className="border border-border px-2.5 py-1 text-lg leading-none transition-colors hover:bg-muted"
-              >
-                ×
-              </button>
-            </div>
-            <ol className="mt-6 space-y-5">
-              {CALLS.map((call) => (
-                <li key={call.id} className="text-sm leading-relaxed">
-                  <strong>{call.title}</strong> {call.body}{" "}
-                  {FLAG_TARGETS.has(call.id) && (
-                    <button
-                      type="button"
-                      onClick={() => jumpTo(call.id)}
-                      className={cn(
-                        "font-medium underline underline-offset-4",
-                        "hover:text-signal"
-                      )}
-                    >
-                      Jump to it
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </aside>
-        </>
-      )}
-    </>
+    </div>
   );
 }

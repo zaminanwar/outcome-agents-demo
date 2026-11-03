@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 /**
@@ -297,7 +299,6 @@ function Diagram({
           ? "Today: work lands on one person, who pulls from a Copilot window, approved content, systems of record and colleagues, then pastes the result in."
           : "With a process agent: work triggers the agent, which reads approved content and records, drafts and checks, then pushes the exact text to the person to approve. The person commits the result."
       }
-      style={{ fontFamily: "var(--font-sans)" }}
     >
       {/* The lane */}
       <line
@@ -305,7 +306,8 @@ function Diagram({
         y1={vw > vh ? nodes.arrive.y + nodes.arrive.h / 2 : nodes.arrive.y + nodes.arrive.h}
         x2={vw > vh ? nodes.output.x : vw / 2}
         y2={vw > vh ? nodes.output.y + nodes.output.h / 2 : nodes.output.y}
-        stroke="var(--border)"
+        stroke="var(--muted-foreground)"
+        strokeOpacity="0.4"
         strokeWidth="1"
         strokeDasharray="2 4"
       />
@@ -345,7 +347,7 @@ function Diagram({
                   fill={ar.signal ? "var(--signal)" : "var(--muted-foreground)"}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  style={{ paintOrder: "stroke", stroke: "var(--background)", strokeWidth: 4 }}
+                  style={{ paintOrder: "stroke", stroke: "var(--card)", strokeWidth: 4 }}
                 >
                   {ar.label}
                 </text>
@@ -376,9 +378,10 @@ function Diagram({
             <rect
               width={r.w}
               height={r.h}
-              fill={isAgent ? "var(--background)" : "var(--card)"}
-              stroke={isPerson && state === "agent" ? "var(--signal)" : "var(--foreground)"}
-              strokeWidth={isAgent || isPerson ? 1.4 : 1}
+              rx={8}
+              fill={isAgent ? "var(--muted)" : "var(--card)"}
+              stroke={isPerson && state === "agent" ? "var(--signal)" : isAgent ? "var(--foreground)" : "var(--border)"}
+              strokeWidth={isAgent || isPerson ? 1.5 : 1}
               strokeDasharray={isCopilot && state === "agent" ? "3 3" : undefined}
             />
             {isPerson ? (
@@ -439,46 +442,44 @@ export function ShiftDiagram() {
   const instant = !!reduced;
 
   return (
-    <div ref={ref}>
-      <div className="border border-border bg-background p-3 sm:p-6">
-        <Diagram layout={WIDE} state={state} instant={instant} className="hidden md:block" />
-        <Diagram layout={NARROW} state={state} instant={instant} className="md:hidden" />
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <div role="tablist" aria-label="Diagram state" className="flex text-sm">
-          {(
-            [
-              ["today", "Today"],
-              ["agent", "With a process agent"],
-            ] as Array<[State, string]>
-          ).map(([s, label]) => (
-            <button
-              key={s}
-              type="button"
-              role="tab"
-              aria-selected={state === s}
-              onClick={() => {
-                setPlayed(true);
-                setState(s);
-              }}
-              className={cn(
-                "border border-border px-3 py-1.5 transition-colors first:border-r-0",
-                state === s
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <p className="font-serif text-lg" aria-live="polite">
+    <Card ref={ref} className="shadow-sm">
+      <CardHeader className="flex flex-wrap items-center justify-between gap-3 border-b">
+        <Tabs
+          value={state}
+          onValueChange={(v) => {
+            setPlayed(true);
+            setState(v as State);
+          }}
+        >
+          <TabsList aria-label="Diagram state">
+            <TabsTrigger value="today">Today</TabsTrigger>
+            <TabsTrigger value="agent">With a process agent</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <p className="text-sm font-medium" aria-live="polite">
           {state === "today"
             ? "The person is the integration."
             : "The person is the approver."}
         </p>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className="py-2 sm:py-4">
+        <Diagram layout={WIDE} state={state} instant={instant} className="hidden md:block" />
+        <Diagram layout={NARROW} state={state} instant={instant} className="md:hidden" />
+      </CardContent>
+      <CardFooter className="gap-x-5 gap-y-2 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <span className="h-px w-4 bg-foreground" aria-hidden />
+          the process pulls or pushes
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-px w-4 bg-signal" aria-hidden />
+          a person decides
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-px w-4 border-t border-dashed border-foreground/60" aria-hidden />
+          suggestion only
+        </span>
+      </CardFooter>
+    </Card>
   );
 }

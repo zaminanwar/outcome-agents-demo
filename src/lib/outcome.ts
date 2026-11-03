@@ -1,15 +1,11 @@
 /**
- * Outcome Agents content — memo edition, 2026-11-01.
- * Walkthrough content, stages and tags are unchanged from the concise port.
- * Judgment calls are listed newest first; the "memo" entry covers this
- * redesign. Plain serializable data, safe to import from Server or Client
- * Components.
+ * Outcome Agents: the founder-facing record of judgment calls, newest first,
+ * plus the contact placeholder. Page copy lives in ./content.ts. Plain
+ * serializable data, safe to import from Server or Client Components.
  */
 
 // The founder sets this. Placeholder until then (flagged on page).
 export const CONTACT_EMAIL = "hello@outcome-agents.example";
-
-export type TagKind = "bought" | "built" | "human";
 
 export interface JudgmentCall {
   id: string;
@@ -18,6 +14,11 @@ export interface JudgmentCall {
 }
 
 export const CALLS: JudgmentCall[] = [
+  {
+    id: "shadcn",
+    title: "Rebuilt the page on shadcn/ui, replacing the Velora UI template and the memo styling.",
+    body: "Same single page, same section order, same claims. The visual world is now shadcn/ui on Next.js and Tailwind: the neutral token set, Geist for everything, cards, a real table for the gap, tabs on the diagram, a sheet for these notes, popovers for the markers, and one signal colour kept for the moments a person decides. Two additions, both illustrative and labelled so: a run-record card beside the headline showing case 0412 waiting on a section owner, and a one-line gate under each of the three steps in How we work, taken from the existing copy. Everything Velora shipped that the page never used (about 450 files of components, blocks, docs and a registry) is deleted along with the unused walkthrough and estimator components; the memo edition is the previous commit on main if you want it back. No copy, price statement, timeline, or the contact placeholder changed.",
+  },
   {
     id: "diagram",
     title: "Drew the shift as one animated diagram with two states of the same process.",
@@ -112,254 +113,5 @@ export const CALLS: JudgmentCall[] = [
     id: "concise",
     title: "Cut the page to short copy and let visuals carry it.",
     body: "After the Velora rebuild the founder said the verbatim port was too wordy. This version keeps the SaaS template's own sections and shortens every section to a line or two plus a diagram, widget, or timeline; the walkthrough bodies, method, stack, fit, status, and FAQ answers are all condensed from the previous version. No claim, number, gate, or open question changed — only the length. The full detail lives in the playbook, not on the page. No data-flag target: this entry covers the whole page.",
-  },
-];
-
-export interface Stage {
-  key: string;
-  label: string;
-  kind?: TagKind;
-}
-
-export const STAGES: Stage[] = [
-  { key: "trigger", label: "Trigger" },
-  { key: "decompose", label: "Decompose" },
-  { key: "retrieve", label: "Retrieve" },
-  { key: "draft", label: "Draft" },
-  { key: "gate", label: "Eval gate", kind: "built" },
-  { key: "approve", label: "Approve", kind: "human" },
-  { key: "write", label: "Write" },
-  { key: "audit", label: "Audit" },
-];
-
-export interface WalkthroughStep {
-  title: string;
-  body: string;
-  tags: Array<[TagKind, string]>;
-}
-
-export interface Process {
-  name: string;
-  intro: string;
-  steps: Record<string, WalkthroughStep>;
-}
-
-export const PROCESSES: Process[] = [
-  {
-    name: "Insurance RFP response",
-    intro:
-      "Illustrative: a mid-size insurer answering a broker's RFP from an approved answer library. One case = one RFP pack.",
-    steps: {
-      trigger: {
-        title: "An RFP pack lands in a SharePoint folder",
-        body: "The flow starts on file arrival, issues a case ID, and posts one Teams message to the bid owner. Nobody opens an agent or types a prompt. Incomplete pack? The flow stops and says so.",
-        tags: [
-          ["bought", "SharePoint trigger, Power Automate agent flow"],
-          ["built", "Case ID and idempotency key per step"],
-        ],
-      },
-      decompose: {
-        title: "One compliance-matrix row per obligation",
-        body: "A deterministic parse turns every requirement — sub-questions included — into one matrix row with its page reference. The matrix is what the bid owner sees first. Nothing is written until every obligation has a row.",
-        tags: [
-          ["bought", "Dataverse table for the matrix"],
-          ["built", "Parser, matrix schema"],
-        ],
-      },
-      retrieve: {
-        title: "Approved answers first, nothing without provenance",
-        body: "Exact lookup in the approved library first, then lexical, then semantic only where it adds something. Every candidate carries owner, approval status, valid-through date, and allowed usage. No provenance, not retrievable.",
-        tags: [
-          ["bought", "SharePoint permission trimming, Dataverse lookup"],
-          ["built", "Library rules, retrieval order, index job"],
-        ],
-      },
-      draft: {
-        title: "The model fills a row from evidence, or writes “gap”",
-        body: "Each row is drafted from retrieved items only, quoting verbatim where it claims anything. No approved evidence means the output is “gap”, routed to the section owner. The model never invents, never submits.",
-        tags: [
-          ["bought", "Copilot Studio autonomous agent, topic per stage"],
-          ["built", "Versioned instructions, template binding"],
-        ],
-      },
-      gate: {
-        title: "Deterministic second pass before anyone reviews",
-        body: "Code checks every row: claims linked, sub-questions covered, no conflicts, nothing past valid-through. A failed check sends the row back to “gap”, never forward. Scored on recall and unsupported claims — never speed.",
-        tags: [
-          ["bought", "Azure Functions, Copilot Studio evaluations for the test set"],
-          ["built", "Validation rules, golden set of 20–50 past RFP rows graded by your bid expert"],
-        ],
-      },
-      approve: {
-        title: "Section owners approve the exact text and sources",
-        body: "Each owner gets a Teams card with the exact answer and its evidence. Approval records a hash of that text, plus prompt version, model ID, approver, timestamp. Edit after approval and the hash breaks — approval void, row returns. Three days unanswered times out to cancel, never approve.",
-        tags: [
-          ["bought", "Power Automate approvals, Teams Adaptive Cards"],
-          ["built", "Hash binding, reviewer queue with multi-day hold"],
-          ["human", "Section owner decides"],
-        ],
-      },
-      write: {
-        title: "Approved rows go into the proposal workspace as suggestions",
-        body: "Approved rows enter the bid document and the matrix status as suggestions. Submitting the proposal stays a human button-press. The agent has no path to the broker.",
-        tags: [
-          ["bought", "Connector to the proposal workspace"],
-          ["built", "Suggestion-only write mode, kill switch"],
-          ["human", "Bid owner submits"],
-        ],
-      },
-      audit: {
-        title: "One run record for the whole case",
-        body: "One run record: case ID, prompt and model versions, retrieval snapshot hash, approvers, outcome, reviewer minutes. The baseline for tuning — and the evidence if compliance asks later.",
-        tags: [
-          ["bought", "Dataverse run record, Purview"],
-          ["built", "Run-record schema"],
-        ],
-      },
-    },
-  },
-  {
-    name: "Support knowledge",
-    intro:
-      "Illustrative: a service desk answering from an approved knowledge base, a support agent approving every reply. One case = one ticket.",
-    steps: {
-      trigger: {
-        title: "A ticket opens in a routed queue",
-        body: "The flow starts when a ticket opens in an opted-in queue. Other queues are untouched. The ticket ID becomes the case ID.",
-        tags: [
-          ["bought", "Service-desk connector, Power Automate agent flow"],
-          ["built", "Queue scope, idempotency"],
-        ],
-      },
-      decompose: {
-        title: "Classify, then check entitlement in code",
-        body: "The agent classifies product and intent. Code checks entitlement and tier against the system of record. Billing disputes, legal threats, outages — anything policy says a human must handle — exits to a person here.",
-        tags: [
-          ["bought", "Copilot Studio autonomous agent, Dataverse lookup"],
-          ["built", "Never-automated list enforced in the flow"],
-        ],
-      },
-      retrieve: {
-        title: "Approved articles only, trimmed to what the customer may see",
-        body: "Only published articles the customer's plan allows. Drafts, internal notes, and past-review-date items are excluded by rule, not by hope.",
-        tags: [
-          ["bought", "SharePoint permission trimming"],
-          ["built", "Article metadata rules, exclusion filters"],
-        ],
-      },
-      draft: {
-        title: "A reply drafted from articles, with article IDs cited",
-        body: "A reply drafted from retrieved articles only, each article ID cited inline. No covering article means “no approved answer” and the ticket goes to the human queue with its classification.",
-        tags: [
-          ["bought", "Copilot Studio autonomous agent"],
-          ["built", "Versioned instructions, reply template"],
-        ],
-      },
-      gate: {
-        title: "Every sentence traceable, no commitments outside policy",
-        body: "Code checks every statement maps to a cited article, no refund, credit, date, or SLA is promised beyond the articles, and no other customer's data leaked in. Failures go to a human with the failing check named.",
-        tags: [
-          ["built", "Validation rules, golden set of 20–50 past tickets graded by a senior agent"],
-        ],
-      },
-      approve: {
-        title: "The support agent approves, edits or rejects in their own queue",
-        body: "The draft lands in the support agent's queue with its cited articles. Approval binds to a hash of the exact reply; an edit re-checks before it can be approved. Nothing reaches a customer without a person pressing approve.",
-        tags: [
-          ["bought", "Power Automate approvals, Teams Adaptive Cards"],
-          ["built", "Hash binding, re-check on edit"],
-          ["human", "Support agent decides"],
-        ],
-      },
-      write: {
-        title: "Reply posted to the ticket by the system, under the agent’s name",
-        body: "The approved reply is posted to the ticket. On a first engagement it lands as a ready-to-send draft — the final send is still the support agent's click.",
-        tags: [
-          ["bought", "Service-desk connector"],
-          ["built", "Suggestion-only write mode"],
-          ["human", "Support agent sends"],
-        ],
-      },
-      audit: {
-        title: "Per-ticket run record, plus the regression loop",
-        body: "Per-ticket run record, plus a regression loop: every rejected or heavily edited draft becomes a row a senior agent grades, so the golden set grows from real failures.",
-        tags: [
-          ["bought", "Dataverse run record, Purview"],
-          ["built", "Failure-to-regression promotion"],
-        ],
-      },
-    },
-  },
-  {
-    name: "Vendor document review",
-    intro:
-      "Illustrative: procurement reviewing a supplier onboarding pack against a checklist. One case = one supplier pack.",
-    steps: {
-      trigger: {
-        title: "A supplier uploads a pack to the onboarding folder",
-        body: "The flow starts on upload, matches the supplier to its procurement record, and issues a case ID. No record, no run — the owner is told.",
-        tags: [
-          ["bought", "SharePoint trigger, Power Automate agent flow"],
-          ["built", "Supplier match rule, idempotency"],
-        ],
-      },
-      decompose: {
-        title: "Checklist by supplier category, decided in code",
-        body: "Required documents and fields come from a table the procurement owner maintains, keyed by category and spend band. Code applies it. The model has no say in what is required.",
-        tags: [
-          ["bought", "Dataverse checklist table"],
-          ["built", "Checklist logic"],
-        ],
-      },
-      retrieve: {
-        title: "Extract fields and look up thresholds and history",
-        body: "Expiry dates, coverage amounts, signatories, and attestation scopes are extracted per document. Code looks up policy thresholds and the supplier's previous submissions.",
-        tags: [
-          ["bought", "Content processing, Dataverse lookup"],
-          ["built", "Field schema per document type"],
-        ],
-      },
-      draft: {
-        title: "A findings list, every finding with a page reference",
-        body: "One finding per checklist item — present, missing, expired, below threshold, or unclear — each with a page reference. “Unclear” is valid. Guessing is not.",
-        tags: [
-          ["bought", "Copilot Studio autonomous agent"],
-          ["built", "Findings template, versioned instructions"],
-        ],
-      },
-      gate: {
-        title: "Dates parsed, thresholds compared, conflicts flagged",
-        body: "Code re-parses every date and amount, compares against thresholds, fails any finding without a page reference, and flags contradictions between documents. The status (approve, conditional, reject) is computed by rule, not written by the model.",
-        tags: [
-          ["built", "Validation rules, status logic, golden set of 20–50 past packs graded by procurement"],
-        ],
-      },
-      approve: {
-        title: "The procurement owner approves findings and status",
-        body: "A card shows findings, computed status, and page references. Approval binds to a hash of the findings. A corrected upload re-runs the case and voids the previous approval by construction.",
-        tags: [
-          ["bought", "Power Automate approvals, Teams Adaptive Cards"],
-          ["built", "Hash binding, multi-day hold"],
-          ["human", "Procurement owner decides"],
-        ],
-      },
-      write: {
-        title: "Findings written to the supplier record; status change proposed",
-        body: "Findings go to the supplier record. The status change is proposed as a pending change a person commits. On a first engagement, nothing changes state without that click.",
-        tags: [
-          ["bought", "Procurement system connector"],
-          ["built", "Suggestion-only write mode, kill switch"],
-          ["human", "Owner commits status"],
-        ],
-      },
-      audit: {
-        title: "Run record per pack, usable in an audit",
-        body: "One run record per pack. When an auditor asks why a supplier was approved in March, the answer is a record, not a recollection.",
-        tags: [
-          ["bought", "Dataverse run record, Purview"],
-          ["built", "Run-record schema"],
-        ],
-      },
-    },
   },
 ];

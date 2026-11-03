@@ -1,45 +1,51 @@
 import Link from "next/link";
 
+import { Logo } from "@/components/logo";
 import { MobileNav } from "@/components/mobile-nav";
 import { Flag } from "@/components/outcome/review";
 import { ThemeToggle } from "@/components/theme-toggle";
-
-const navLinks = [
-  { href: "/#shift", label: "The shift" },
-  { href: "/#gap", label: "The gap" },
-  { href: "/#example", label: "One example" },
-  { href: "/#get", label: "What you get" },
-  { href: "/#how", label: "How we work" },
-  { href: "/#you", label: "Is this you?" },
-] as const;
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CTA, NAV } from "@/lib/content";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-5 sm:px-8">
-        <Link href="/" className="flex items-baseline gap-2.5">
-          <span className="font-serif text-lg tracking-tight">Outcome Agents</span>
-          <span data-flag="name" className="hidden text-[11px] text-muted-foreground sm:inline">
+    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <div className="flex shrink-0 items-center gap-3">
+          <Link href="/" aria-label="Outcome Agents, home">
+            <Logo />
+          </Link>
+          <Badge
+            variant="outline"
+            data-flag="name"
+            className="hidden font-normal text-muted-foreground sm:inline-flex"
+          >
             working name
             <Flag id="name" />
-          </span>
-        </Link>
-        <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="transition-colors hover:text-foreground">
-              {link.label}
-            </Link>
+          </Badge>
+        </div>
+
+        <nav aria-label="Sections" className="hidden items-center gap-0.5 xl:flex">
+          {NAV.map((link) => (
+            <Button
+              key={link.href}
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
           ))}
-          <Link
-            href="/#contact"
-            className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-          >
-            Tell us about the process
-          </Link>
         </nav>
-        <div className="flex items-center gap-1">
+
+        <div className="flex items-center gap-1.5">
+          <Button size="sm" asChild className="hidden md:inline-flex">
+            <Link href={CTA.href}>{CTA.label}</Link>
+          </Button>
           <ThemeToggle />
-          <MobileNav links={[...navLinks, { href: "/#contact", label: "Tell us about the process" }]} />
+          <MobileNav />
         </div>
       </div>
     </header>
